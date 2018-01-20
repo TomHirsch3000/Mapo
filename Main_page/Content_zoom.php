@@ -368,9 +368,9 @@ z-index:10">
 		width:<?php echo min(max(($row_getexperiment['size']*$multiplier*7),10),150)."px"; ?>;
 	">
 		<p style="text-align:center;z-index:-1"><img id="myimage" 
-		src=<?php echo "images/".$row_getexperiment['image'];?> 
-		width=98% alt=<?php echo "images/".$row_getexperiment['image'];?> 
-		longdesc=<?php echo "images/".$row_getexperiment['image'];?> />  
+		src=<?php echo "../../images/".$row_getexperiment['image'];?> 
+		width=98% alt=<?php echo "../../images/".$row_getexperiment['image'];?> 
+		longdesc=<?php echo "../../images/".$row_getexperiment['image'];?> />  
 		</p> 
 	</div>
 	<!-- title-->

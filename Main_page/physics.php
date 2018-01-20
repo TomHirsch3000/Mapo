@@ -371,7 +371,7 @@ color:#87D86D;
 	  <div style = "width:1210px; margin: 0px auto;">
 		<div style = "width:400px;">
 			  <p style="float:left;margin-top:5px">
-				  <img src="/images/Pale_Blue_Dot.jpg" alt="Logo" 
+				  <img src="../../images/Pale_Blue_Dot.jpg" alt="Logo" 
 				  name="Insert_logo" width="180" height="80" id="Pale_Blue_Dot" 
 				  style="background: #66FF33; display:block;" />
 			  </p>
