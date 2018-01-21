@@ -196,6 +196,9 @@ the final element following the last floated div (within the #container) if the 
 	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 5px 15px rgba(0, 0, 0, 0.24);
 
 } 
+
+
+
 .content {
 	padding: 0 0;
 	width: 1000px;
@@ -241,81 +244,32 @@ border-width:2px;
 opacity: 1;
 z-index:200 !important;
 border-color:#186400;
-width:200px !important;
-height:300px !important;
+width:350px !important;
+height:500px !important;
 }
-
-
-
-/*node1*/
-	// style=overflow:hidden;
-	// width:;
-	// position:absolute;
-	// left:;
-	// top:;
-	// z-index:100;
-	
-	/* node-header*/
-		// text-align:center;
-		// background:#5EBA41;
-		// overflow:hidden;
-		
-		/*img-wrap*/
-			// float:left;
-			// margin-top:2px;
-			// margin-bottom:0px;
-			// width:100px;*/{}
 			
-			/*image*/
-				.node1:hover #myimage
-				{width:190px !important;}
+/*image*/
+	.node1:hover #myimage
+	{width:290px !important;
+	height:200px !important;
+	margin-left: 20px !important;
+	}
 
-		/*title*/
-			.node1:hover .node-title
-			{font-size:20px !important;
-			width:190px !important;
-			}
-
-			// float:left;
-			// margin-top:2px;
-			// margin-bottom:
-			// 0px;
-
-			// font-size:;{}
-	/*text*/
-
+/*title*/
+	.node1:hover .node-title
+	{font-size:25px !important;
+	width:290px !important;
+	}
+/*text*/
 	.node1:hover .text-wrap1
-	{width:190px !important;
+	{width:330px !important;
 	font-size:15px !important;
 	overflow-y:scroll !important;
-	height:80px !important;
+	height:180px !important;
 	}
-		// float:left;
 
 
-	/*vote*/
-		// float:top;
-		// width:;
-	
-		/*arrow-upvote*/
-			// style="float:left;
-			// width: 0; height: 0; 
-			// border-left: 
-			// border-right: 
-			// border-bottom:
-			// font-size:
 
-		/*boarder*/
-			// float:left;
-			// font-size:
-
-		/*arrow-dvote*/
-			// float:left;
-			// width: 0; height: 0; 
-			// border-left:  
-			// border-right: 
-			// border-top:   
-			// font-size:;{}
 
 
 
