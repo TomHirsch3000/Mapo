@@ -184,15 +184,17 @@ the final element following the last floated div (within the #container) if the 
 .sidebar1 {
     float: left;
 	width: 200px;
-    height: 750px;
+    height: 450px;
 	background: white;
 	padding-bottom: 0px;
 	border-radius: 10px;
 	border-style:solid;
 	border-color:#43A621;
 	color:#186400;
-	margin-top:53px;
-	border-width:2px;
+	margin-top:50px;
+	border-width:1px;
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 5px 15px rgba(0, 0, 0, 0.24);
+
 } 
 .content {
 	padding: 0 0;
@@ -208,12 +210,15 @@ the final element following the last floated div (within the #container) if the 
 }
 .node1
 {
-background:rgba(135, 216, 109,0.6);
+background:white;
+//border-style:solid;
+//rgba(135, 216, 109,0.6);
 color:black;
 border-radius: 10px;
 border-style:solid;
 border-color: #43A621;
-border-width:2px;
+border-width:1px;
+box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 5px 15px rgba(0, 0, 0, 0.24);
 
 }
 .node-new
@@ -237,6 +242,7 @@ opacity: 1;
 z-index:200 !important;
 border-color:#186400;
 width:200px !important;
+height:300px !important;
 }
 
 
@@ -403,7 +409,7 @@ class="container" style = "margin-top:30px;position:static;"
   <div class="sidebar1">
     <ul class="nav" style = "margin-top:10px">
          <li><a href="#" style = "color:#186400"><b>Add new node</b></a></li>
-	        <p> use the form to add more information to the map </p>
+	        <p style="margin-left:4px;margin-right:4px;text-align:center"> use the form to add more information to the map </p>
 		<div class="node-new" style="margin-left:10px;margin-right:10px;overflow:hidden">
 			<div class = "head-new" style = "background:#5EBA41;overflow:hidden">
 				<div class = "node-title-new" style = "position:relative;width:150px;float:left;left:0px">	
@@ -503,7 +509,7 @@ function searchResults (form) {
     replace_content(search_inp);
 }
 </script>
-	<div class="content" id="target" style = "border-radius: 10px;border-style:solid;border-color: #43A621;border-width:2px;">
+	<div class="content" id="target">
 			<?php 
 			require('content_zoom.php'); 
 			?>
@@ -513,10 +519,9 @@ function searchResults (form) {
 	
 
 
-  <div class="footer">
-  <p style = "color:#186400"> Welcome to the map. This website is designed to crowd-source information and present it as a map </p>
-    <!-- end .footer --></div>
+
   <!-- end .container --></div>
+
 </body>
 </html>
 

@@ -356,34 +356,39 @@ z-index:10">
 <div class="node1" onclick ="replace_content('<?php echo $row_getexperiment['order_id']; ?>')"
 	style="overflow:hidden;
 	width:<?php echo min(max(($row_getexperiment['size']*$multiplier*10),10),150)."px"; ?>;
+	height:<?php echo min(max(($row_getexperiment['size']*$multiplier*15),0),200)."px"; ?>;	
 	position:absolute;
 	left:<?php echo (((($row_getexperiment['x_position'])-$horizontal_min)/($horizontal_max - $horizontal_min))*1000)."px"; ?>;
 	top:<?php echo (((($row_getexperiment['y_position'])-$vertical_min)/($vertical_max - $vertical_min))*750)."px"; ?>; 
 	z-index:100"
 >
+
 <!-- header-->
 <div class="node-header" style = "text-align:center;background:#5EBA41;overflow:hidden;">
-	<!-- image-->
-	<div class= "img-wrap" style = "float:left;margin-top:2px;margin-bottom:0px;
-		width:<?php echo min(max(($row_getexperiment['size']*$multiplier*7),10),150)."px"; ?>;
-	">
-		<p style="text-align:center;z-index:-1"><img id="myimage" 
-		src=<?php echo "../../images/".$row_getexperiment['image'];?> 
-		width=98% alt=<?php echo "../../images/".$row_getexperiment['image'];?> 
-		longdesc=<?php echo "../../images/".$row_getexperiment['image'];?> />  
-		</p> 
-	</div>
+<!-- image-->
+<div class= "img-wrap" style = "float:left;margin-top:2px;margin-bottom:0px;margin-left:4px;
+	width:<?php echo min(max(($row_getexperiment['size']*$multiplier*7),10),150)."px"; ?>;
+">
+	<p style="text-align:center;z-index:-1"><img id="myimage" 
+	src=<?php echo "../../images/".$row_getexperiment['image'];?> 
+	width=98% alt=<?php echo "../../images/".$row_getexperiment['image'];?> 
+	longdesc=<?php echo "../../images/".$row_getexperiment['image'];?> />  
+	</p> 
+
+
 	<!-- title-->
 	<p class="node-title" style="float:left;margin-top:2px;margin-bottom:0px;
 	width:<?php echo min(max(($row_getexperiment['size']*$multiplier*7),9),150)."px"; ?>;
-	font-size:<?php echo min(max(($row_getexperiment['size']*$multiplier),4),16)."px"; ?>"><?php echo $row_getexperiment['title']; ?></p>
-</div>
+	font-size:<?php echo min(max(($row_getexperiment['size']*$multiplier),4),14)."px"; ?>"><?php echo $row_getexperiment['title']; ?></p>
+	</div>
+</div>	
+
 
 <!-- text-->
-<div class = "text-wrap1" style = "float:left;
+<div class = "text-wrap1" style = "float:left;margin-top:2px;margin-left:4px;z-index:-1;
 	width:<?php echo min(max(($row_getexperiment['size']*$multiplier*7),10),150)."px"; ?>;
-	font-size:<?php echo min(max(($row_getexperiment['size']*$multiplier),0),10)."px"; ?>;
-	height:<?php echo min(max(($row_getexperiment['size']*$multiplier),0),50)."px"; ?>;;
+	font-size:<?php echo min(max(($row_getexperiment['size']*$multiplier),0),8)."px"; ?>;
+	height:<?php echo min(max(($row_getexperiment['size']*$multiplier),0),50)."px"; ?>;
 	overflow:hidden;
 ">
 	<p><?php echo $row_getexperiment['text']; ?></p> 
@@ -422,19 +427,19 @@ z-index:10">
 		<?php 	require('zoom_buttons_v3001.php'); ?>
 <?php 	mysql_data_seek( $getexperiment, 0 ); ?>
  
-<svg height="750" width="1000" style="float:left;pointer-events:none">
+<svg height="750" width="1000" style="float:left;pointer-events:none;">
 	<style>
 		rect:hover {
 			fill:#eee;
 		}
 	</style>
 	<?php do { ?>	  
-		<line 
+		<line stroke-dasharray="5, 1"
 		  x1="<?php echo (((($row_getexperiment['x_position'])-$horizontal_min)/($horizontal_max - $horizontal_min))*1000)."px";?>"
 		  y1="<?php echo (((($row_getexperiment['y_position'])-$vertical_min)/($vertical_max - $vertical_min))*750)."px";?>"
 			x2="<?php echo (((($row_getexperiment['linked_x'])-$horizontal_min)/($horizontal_max - $horizontal_min))*1000)."px";?>"
 			y2="<?php echo (((($row_getexperiment['linked_y'])-$vertical_min)/($vertical_max - $vertical_min))*750)."px";?>"
-		   style="stroke:rgb(200,200,200);stroke-width:2" />
+		   style="stroke:rgb(200,200,200);stroke-width:0.5;" />
 <?php } while ($row_getexperiment = mysql_fetch_assoc($getexperiment));
  ?>
 	
