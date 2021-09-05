@@ -323,13 +323,13 @@ color:#87D86D;
 	  <div style = "width:1210px; margin: 0px auto;">
 		<div style = "width:400px;">
 			  <p style="float:left;margin-top:5px">
-				  <img src="../../images/Pale_Blue_Dot.jpg" alt="Logo" 
+				  <img src="../Images/Pale_Blue_Dot.jpg" alt="Logo" 
 				  name="Insert_logo" width="180" height="80" id="Pale_Blue_Dot" 
 				  style="background: #66FF33; display:block;" />
 			  </p>
 			  <h1 style="float:left;margin-left:10px;margin-top:5px;font-size:40px;">Map-O</h1>
 		 </div>
-		 <div style ="	position:fixed;	left: 300px;	right: 0px;	top: 0px;  width:810;">
+		 <div style ="	position:fixed;	left: 800px;	right: 0px;	top: 0px;  width:810;">
 		  <!-- search-->
 				<form style = "float:top;font-size:10px;padding-left:150px;margin-top:5px;z-index:2000">
 				<input type="text" size="5" name= "inputbox" onkeyup="showResult(this.value)" style = "float:left;font-size:20px;width:400px;margin-top:5px" >
