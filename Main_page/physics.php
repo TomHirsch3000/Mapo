@@ -7,14 +7,14 @@ $_SESSION['horizontal_max'] = 1250;
 $_SESSION['vertical_min'] = -750;
 $_SESSION['vertical_max'] = 1250;
 $_SESSION['multiplier'] = 0.1;
-$_SESSION['map_select'] = 'physics';
+$_SESSION['map_select'] = "sheet1";
  ?>
  
  
  
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; cahrset=utf-8" />
 <title>MapO</title>
 <style type="text/css">
 <!--

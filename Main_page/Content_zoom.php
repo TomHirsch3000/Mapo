@@ -59,8 +59,20 @@ else $_SESSION['map_select'] = 'Physics';
 $hostname_physixjuly = "localhost";
 $database_physixjuly = "test";
 $username_physixjuly = "phptestuser";
-$password_physixjuly = "blib";
-$physixjuly = mysql_pconnect($hostname_physixjuly, "root") or trigger_error(mysql_error(),E_USER_ERROR); 
+$password_physixjuly = "";
+$physixjuly = mysqli_connect("p:".$hostname_physixjuly, "root", $password_physixjuly, $database_physixjuly); 
+$mysqli = mysqli_connect("p:".$hostname_physixjuly, "root", $password_physixjuly, $database_physixjuly); 
+
+// Check connection
+if ($physixjuly->connect_error) {
+  die("Connection failed: " . $physixjuly->connect_error);
+}
+echo "Connected successfully";
+
+
+$result = $mysqli->query("SELECT title FROM sheet1 LIMIT 10");
+printf("Select returned %d rows.\n", $result->num_rows);
+
 $map_select = $_SESSION['map_select'];
 ?>
  <?php
@@ -246,14 +258,15 @@ $map_select = $_SESSION['map_select'];
 	//if user has clicked on a node then centre map on it
 	elseif ($z_num > 100) {
 		//pull coordinates for the selected node
-		mysql_select_db($database_physixjuly, $physixjuly);
-		$query_getnode = "SELECT size_v1 as size, link1, x_position, y_position, linked_x, linked_y, order_id
+		//mysql_select_db($database_physixjuly, $physixjuly);
+		$query_getnode = "SELECT size, link1, x_position, y_position, linked_x, linked_y, order_id
 		 FROM $map_select
 		 where order_id = '$z_num' 
 		 ";
-		$getnode = mysql_query($query_getnode, $physixjuly) or die(mysql_error());
-		$row_getnode = mysql_fetch_assoc($getnode);
-		$totalRows_getnode = mysql_num_rows($getnode);
+		$getnode = mysqli_query($physixjuly, $query_getnode);
+		printf("Select returned %d rows.\n", $getnode->num_rows);
+		$row_getnode = mysqli_fetch_assoc($getnode);
+		$totalRows_getnode = mysqli_num_rows($getnode);
 	
 			$_SESSION['multiplier'] = 200 / $row_getnode['size'];	
 			$_SESSION['size_min'] = $row_getnode['size']-200;					
@@ -266,14 +279,16 @@ $map_select = $_SESSION['map_select'];
 	}}
 	else {
 		//pull coordinates for the selected node character string
-		mysql_select_db($database_physixjuly, $physixjuly);
-		$query_getnode = "SELECT title, size_v1 as size, link1, x_position, y_position, linked_x, linked_y, order_id
+		//mysql_select_db($database_physixjuly, $physixjuly);
+		$query_getnode = "SELECT title, size, link1, x_position, y_position, linked_x, linked_y, order_id
 		 FROM $map_select
 		 where title = '$z_num' 
 		 ";
-		$getnode = mysql_query($query_getnode, $physixjuly) or die(mysql_error());
-		$row_getnode = mysql_fetch_assoc($getnode);
-		$totalRows_getnode = mysql_num_rows($getnode);
+		$getnode = mysqli_query($physixjuly, $query_getnode);
+		printf("Select returned %d rows.\n", $getnode->num_rows);
+
+		$row_getnode = mysqli_fetch_assoc($getnode);
+		$totalRows_getnode = mysqli_num_rows($getnode);
 		
 			$_SESSION['multiplier'] = 200 / $row_getnode['size'];	
 			$_SESSION['size_min'] = $row_getnode['size']-200;					
@@ -312,19 +327,21 @@ $map_select = $_SESSION['map_select'];
 	
 	
 	
-	mysql_select_db($database_physixjuly, $physixjuly);
-	$query_getexperiment = "SELECT title, text, size_v1 as size, image, x_position, y_position, linked_x, linked_y, order_id
+	//mysql_select_db($database_physixjuly, $physixjuly);
+	$query_getexperiment = "SELECT title, text, size, image, x_position, y_position, linked_x, linked_y, order_id
 		 FROM $map_select
-		 where size_v1 >= '$size_min' 
-		 and size_v1 <= '$size_max'
+		 where size >= '$size_min' 
+		 and size <= '$size_max'
 		 and x_position <= '$horizontal_max'
 		 and x_position >= '$horizontal_min'
 		 and y_position <= '$vertical_max'
 		 and y_position >= '$vertical_min'
 		 ";
-	$getexperiment = mysql_query($query_getexperiment, $physixjuly) or die(mysql_error());
-	$row_getexperiment = mysql_fetch_assoc($getexperiment);
-	$totalRows_getexperiment = mysql_num_rows($getexperiment);
+	$getexperiment = mysqli_query($physixjuly, $query_getexperiment);
+		printf("Select returned %d rows.\n", $getexperiment->num_rows);
+
+	$row_getexperiment = mysqli_fetch_assoc($getexperiment);
+	$totalRows_getexperiment = mysqli_num_rows($getexperiment);
  ?>
  <div class="node1" style = "
 width:150px;
@@ -370,9 +387,9 @@ z-index:10">
 	width:<?php echo min(max(($row_getexperiment['size']*$multiplier*7),10),150)."px"; ?>;
 ">
 	<p style="text-align:center;z-index:-1"><img id="myimage" 
-	src=<?php echo "../../images/".$row_getexperiment['image'];?> 
-	width=98% alt=<?php echo "../../images/".$row_getexperiment['image'];?> 
-	longdesc=<?php echo "../../images/".$row_getexperiment['image'];?> />  
+	src=<?php echo "../Images/".$row_getexperiment['image'];?> 
+	width=98% alt=<?php echo "../Images/".$row_getexperiment['image'];?> 
+	longdesc=<?php echo "../Images/".$row_getexperiment['image'];?> />  
 	</p> 
 
 
@@ -421,11 +438,11 @@ z-index:10">
 
 </div>
 
-<?php } while ($row_getexperiment = mysql_fetch_assoc($getexperiment)); ?>
+<?php } while ($row_getexperiment = mysqli_fetch_assoc($getexperiment)); ?>
 
 	
 		<?php 	require('zoom_buttons_v3001.php'); ?>
-<?php 	mysql_data_seek( $getexperiment, 0 ); ?>
+<?php 	mysqli_data_seek( $getexperiment, 0 ); ?>
  
 <svg height="750" width="1000" style="float:left;pointer-events:none;">
 	<style>
@@ -440,7 +457,7 @@ z-index:10">
 			x2="<?php echo (((($row_getexperiment['linked_x'])-$horizontal_min)/($horizontal_max - $horizontal_min))*1000)."px";?>"
 			y2="<?php echo (((($row_getexperiment['linked_y'])-$vertical_min)/($vertical_max - $vertical_min))*750)."px";?>"
 		   style="stroke:rgb(200,200,200);stroke-width:0.5;" />
-<?php } while ($row_getexperiment = mysql_fetch_assoc($getexperiment));
+<?php } while ($row_getexperiment = mysqli_fetch_assoc($getexperiment));
  ?>
 	
 </svg>  
