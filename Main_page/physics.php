@@ -7,7 +7,7 @@ $_SESSION['horizontal_max'] = 1250;
 $_SESSION['vertical_min'] = -750;
 $_SESSION['vertical_max'] = 1250;
 $_SESSION['multiplier'] = 0.1;
-$_SESSION['map_select'] = "sheet1";
+$_SESSION['map_select'] = "physics";
  ?>
  
  

@@ -49,7 +49,7 @@ else $_SESSION['multiplier'] = 0.1;
 
 if(isset($_SESSION['map_select']))
 $_SESSION['map_select']=$_SESSION['map_select'];
-else $_SESSION['map_select'] = 'Physics';
+else $_SESSION['map_select'] = 'physics';
  ?>
 
 	<?php
@@ -58,7 +58,7 @@ else $_SESSION['map_select'] = 'Physics';
 # HTTP="true"
 $hostname_physixjuly = "localhost";
 $database_physixjuly = "test";
-$username_physixjuly = "phptestuser";
+$username_physixjuly = "root";
 $password_physixjuly = "";
 $physixjuly = mysqli_connect("p:".$hostname_physixjuly, "root", $password_physixjuly, $database_physixjuly); 
 $mysqli = mysqli_connect("p:".$hostname_physixjuly, "root", $password_physixjuly, $database_physixjuly); 
@@ -70,7 +70,7 @@ if ($physixjuly->connect_error) {
 echo "Connected successfully";
 
 
-$result = $mysqli->query("SELECT title FROM sheet1 LIMIT 10");
+$result = $mysqli->query("SELECT title FROM physics LIMIT 10");
 printf("Select returned %d rows.\n", $result->num_rows);
 
 $map_select = $_SESSION['map_select'];
@@ -329,7 +329,7 @@ $map_select = $_SESSION['map_select'];
 	
 	//mysql_select_db($database_physixjuly, $physixjuly);
 	$query_getexperiment = "SELECT title, text, size, image, x_position, y_position, linked_x, linked_y, order_id
-		 FROM $map_select
+		 FROM sheet1
 		 where size >= '$size_min' 
 		 and size <= '$size_max'
 		 and x_position <= '$horizontal_max'
