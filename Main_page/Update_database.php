@@ -2,7 +2,7 @@
 
 $hostname_physixjuly = "localhost";
 $database_physixjuly = "test";
-$username_physixjuly = "phptestuser";
+$username_physixjuly = "root";
 $password_physixjuly = "";
 
 $map_select = 'physics';
@@ -15,9 +15,8 @@ if (mysqli_connect_errno()) {
 }
 
 /*drop sheets*/
-if ($mysqli->query("drop table IF EXISTS sheet2, sheet3, sheet4, upvote_x") === TRUE) {printf("upvote_x dropped.\n");}
-if ($mysqli->query("drop table IF EXISTS sheet5, lag2_link_count, sheet6, depth_count, linked_values, output") === TRUE) {printf("output dropped.\n");}
-if ($mysqli->query("drop table IF EXISTS calibrate_0, calibrate_1, calibrate_2, calibrate_3, calibrate_4, calibrate_5") === TRUE) {printf("calibrate_5 dropped.\n");}
+if ($mysqli->query("drop table IF EXISTS sheet2, sheet3, sheet4, upvote_x, sheet5, lag2_link_count, sheet6, depth_count, linked_values,
+ output, calibrate_0, calibrate_1, calibrate_2, calibrate_3, calibrate_4, calibrate_5") === TRUE) {printf("dropped tables.\n");}
 
 
 /*create sheet 2 and order by size*/
@@ -25,23 +24,22 @@ if ($mysqli->query("create table IF NOT EXISTS physics as select * from sheet1 o
     printf("main table created and ordered.\n");
 }
 
-echo("<BR><BR> start code");
+echo("<BR><BR> start code\n");
 
 
-/*work out how many child nodes a parent node has and give them an order*/
 /*merge sorted data with location values*/
+/*work out how many child nodes a parent node has and give them an order*/
+
 
 
 if ($mysqli->query("create table relative_locations as 
 select
-	a.title ,a.size ,a.unique_ID ,a.image ,a.link1 ,a.link2 ,a.field ,a.Type ,a.Text
+	a.title ,a.size ,a.unique_ID ,a.image ,a.link1 ,a.link2 ,a.Text
 
-,case when a.Type = 'Field' then b.x_position
-		when a.link1 is not null then b.x_link_pos * 2
-		else b.x_position * 2 end as relative_x_position 
-,case when a.Type = 'Field' then b.y_position
-		when a.link1 is not null then b.y_link_pos * 2
-		else b.y_position * 2 end as relative_y_position
+,case when a.link1 is not null then b.x_link_pos
+		else b.x_position end as relative_x_position 
+,case when a.link1 is not null then b.y_link_pos
+		else b.y_position end as relative_y_position
 	
 from 
 	physics a
@@ -50,7 +48,7 @@ left join
 	(SELECT  
 		title
 		,link1
-		,ROW_NUMBER() OVER(PARTITION BY link1 order by size descending) AS child_node_order
+		,ROW_NUMBER() OVER(PARTITION BY link1 order by size desc) as child_node_order
 	from 
 		physics) child_nodes
 on 
@@ -59,10 +57,10 @@ on
 left join 
 	location_values_v2 as b
 on 
-	a.child_node_order = b.order_id
+	child_nodes.child_node_order = b.order_id
 
- ") === TRUE) {printf("sorted data merged with location values.\n");}
-else echo("failed to merge with location values: ". $mysqli->error . "<br>");
+ ") === TRUE) {printf("<BR>sorted data merged with location values.\n");}
+else echo("<BR>failed to merge with location values: ". $mysqli->error . "<br>");
 
  
  
@@ -71,9 +69,9 @@ else echo("failed to merge with location values: ". $mysqli->error . "<br>");
  if ($mysqli->query("
 
 create table depth_count as select
-	node.title ,node.unique_ID ,node.image ,node.link1 ,node.link2 ,node.Text, relative_x_position, relative_y_position
+	node.title ,node.unique_ID ,node.image ,node.link1 ,node.link2 ,node.Text, node.relative_x_position, node.relative_y_position
 
-	case 
+	,case 
 		when node.link1 is null then 1
 		when deep1.title is null then 2
 		when deep2.title is null then 3
@@ -97,9 +95,9 @@ create table depth_count as select
 from 
 	relative_locations as node
 left join relative_locations as deep1 on node.link1 = deep1.title
-left join relative_locations as deep2 on deep1.link1 = deep2.tite
-left join relative_locations as deep3 on deep2.link1 = deep3.tite
-left join relative_locations as deep4 on deep3.link1 = deep4.tite
+left join relative_locations as deep2 on deep1.link1 = deep2.title
+left join relative_locations as deep3 on deep2.link1 = deep3.title
+left join relative_locations as deep4 on deep3.link1 = deep4.title
 
 ") === TRUE) {
     printf("<BR> depth count complete.\n");
@@ -108,132 +106,60 @@ else echo("depth count Statement failed: ". $mysqli->error . "<br>");
 
  
 // level 2 nodes
+$i = 2;
+do {
+	
+	$stmt = $mysqli->prepare("
+
+	create table level_?_nodes as select
+		node.title ,node.unique_ID ,node.image ,node.link1 ,node.link2 ,node.Text, node.size, node.depth
+
+		,case when parent_node.x_position > 0 then  (parent_node.x_position + (node.relative_x_position))
+				when parent_node.x_position <= 0 then (parent_node.x_position - (node.relative_x_position))
+				else null end as x_position
+		,case when parent_node.y_position > 0 then (parent_node.y_position + (node.relative_y_position))
+					  when parent_node.y_position <= 0 then (parent_node.y_position - (node.relative_y_position))
+				else null end as y_position
 
 
-if ($mysqli->query("
+		(select	 title ,unique_ID ,image ,link1 ,link2  ,Text, size, depth, relative_x_position, relative_y_position from depth_count where depth = ?) as node	
+	left join
+		(select	 title ,unique_ID ,image ,link1 ,link2 ,Text, size, depth, x_position, y_position from depth_count where depth = (?-1)) as parent_node	
+	on
+		node.link1 = parent_node.title
 
-create table level_2_nodes as select
-	node.title ,node.unique_ID ,node.image ,node.link1 ,node.link2 ,node.Text, node.size, node.depth
+	") or trigger_error($mysqli->error, E_USER_ERROR);
+	$stmt->bind_param("iii", $i, $i, $i);
+	$stmt->execute() or trigger_error($statement->error, E_USER_ERROR);
 
-	,case when parent_node.x_position > 0 then  (parent_node.x_position + (node.relative_x_position))
-			when parent_node.x_position <= 0 then (parent_node.x_position - (node.relative_x_position))
-			else null end as x_position
-	,case when parent_node.y_position > 0 then (parent_node.y_position + (node.relative_y_position))
-				  when parent_node.y_position <= 0 then (parent_node.y_position - (node.relative_y_position))
-			else null end as y_position
+	{echo "<BR> depth level {$i} complete.\n";}
 
-
-	(select	 title ,unique_ID ,image ,link1 ,link2  ,Text, size, depth, relative_x_position, relative_y_position from depth_count where depth = 2) as node	
-left join
-	(select	 title ,unique_ID ,image ,link1 ,link2 ,Text, size, depth, x_position, y_position	from depth_count where depth = 1) as parent_node	
-on
-	node.link1 = parent_node.title
-
-") === TRUE) {
-    printf("<BR> depth level 2 complete.\n");
-}
-else echo("depth level 2 Statement failed: ". $mysqli->error . "<br>");
+	$i= $i+1;
+} while ($i < 5);
 
  
 
- // level 3 nodes
-
-
-if ($mysqli->query("
-
-create table level_3_nodes as select
-	node.title ,node.unique_ID ,node.image ,node.link1 ,node.link2 ,node.Text, node.size, node.depth
-	,case when parent_node.x_position > 0 then  (parent_node.x_position + (node.relative_x_position))
-			when parent_node.x_position <= 0 then (parent_node.x_position - (node.relative_x_position))
-			else null end as x_position
-	,case when parent_node.y_position > 0 then (parent_node.y_position + (node.relative_y_position))
-				  when parent_node.y_position <= 0 then (parent_node.y_position - (node.relative_y_position))
-			else null end as y_position
-
-
-	(select	 title ,unique_ID ,image ,link1 ,link2  ,Text, size, depth, relative_x_position, relative_y_position from depth_count where depth = 3) as node	
-left join
-	(select	 title ,unique_ID ,image ,link1 ,link2  ,Text, size, depth, x_position, y_position	from depth_count where depth = 2) as parent_node	
-on
-	node.link1 = parent_node.title
-
-") === TRUE) {
-    printf("<BR> depth level 3 complete.\n");
-}
-else echo("depth level 3 Statement failed: ". $mysqli->error . "<br>");
-
-
- // level 4 nodes
-if ($mysqli->query("
-
-create table level_4_nodes as select
-	node.title ,node.unique_ID ,node.image ,node.link1 ,node.link2 ,node.Text, node.size, node.depth
-	,case when parent_node.x_position > 0 then  (parent_node.x_position + (node.relative_x_position))
-			when parent_node.x_position <= 0 then (parent_node.x_position - (node.relative_x_position))
-			else null end as x_position
-	,case when parent_node.y_position > 0 then (parent_node.y_position + (node.relative_y_position))
-				  when parent_node.y_position <= 0 then (parent_node.y_position - (node.relative_y_position))
-			else null end as y_position
-
-
-	(select	title ,unique_ID ,image ,link1 ,link2  ,Text, size, depth, relative_x_position, relative_y_position from depth_count where depth = 4) as node	
-left join
-	(select	title ,unique_ID ,image ,link1 ,link2  ,Text, size, depth, x_position, y_position	from depth_count where depth = 3) as parent_node	
-on
-	node.link1 = parent_node.title
-
-") === TRUE) {
-    printf("<BR> depth level 4 complete.\n");
-}
-else echo("depth level 4 Statement failed: ". $mysqli->error . "<br>");
-
-
+if ($mysqli->query("drop table IF EXISTS $map_select ") === TRUE) {printf("$map_select  dropped.\n");}
 
  //rename variables
-if ($mysqli->query("create table output as select
-title 
-,unique_ID 
-,image 
-,link1
-,link2 
-,Text
-
-,depth
-,x_position as original_x
-,y_position as original_y
-,size as original_size
-,calibrated_x_position as x_position
-,calibrated_y_position as y_position
-,calibrated_size as size
-,linked_x
-,linked_y
+if ($mysqli->query("
+drop table IF EXISTS physics;
+create table physics as select
+	title ,unique_ID ,image ,link1, link2 ,Text ,depth ,x_position ,y_position ,size
 
 from
-	(select * from depth_count where depth in (0,1)) level_1_nodes
+	select title ,unique_ID ,image ,link1, link2 ,Text ,depth ,x_position ,y_position ,size from depth_count where depth in (0,1)) level_1_nodes
 union all
-	level_2_nodes
+	select title ,unique_ID ,image ,link1, link2 ,Text ,depth ,x_position ,y_position ,size from level_2_nodes
 union all
-	level_3_nodes
+	select title ,unique_ID ,image ,link1, link2 ,Text ,depth ,x_position ,y_position ,size from level_3_nodes
 union all
-	level_4_nodes
+	select title ,unique_ID ,image ,link1, link2 ,Text ,depth ,x_position ,y_position ,size from level_4_nodes;
 
   ") === TRUE) {printf("<BR> output created successfully.\n");}
 else echo("output Statement failed: ". $mysqli->error . "<br>");
  
- 
- //create backup
-  
-if ($mysqli->query("create table backup1 as select * from $map_select ") === TRUE) {printf("<BR><BR>$map_select  backed up.\n");}
-/*drop sheet1*/
-if ($mysqli->query("drop table IF EXISTS $map_select ") === TRUE) {printf("$map_select  dropped.\n");}
 
-/*create sheet1 from sheet4*/
-if ($mysqli->query("create table $map_select as select * 
-,floor(size/10) as size_v1
-from output
-order by order_id") === TRUE) {
-    printf("$map_select created and ordered.\n");
-}
 
 if ($mysqli->query("ALTER TABLE $map_select ADD UNIQUE (order_id)
 ") === TRUE) {
