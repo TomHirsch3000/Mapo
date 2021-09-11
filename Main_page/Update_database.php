@@ -15,7 +15,7 @@ if (mysqli_connect_errno()) {
 }
 
 /*drop sheets*/
-if ($mysqli->query("drop table IF EXISTS physics, sheet2, sheet3, sheet4, upvote_x, sheet5, lag2_link_count, sheet6, depth_count, linked_values,
+if ($mysqli->query("drop table IF EXISTS physics, relative_locations, sheet2, sheet3, sheet4, upvote_x, sheet5, lag2_link_count, sheet6, depth_count, linked_values,
  output, calibrate_0, calibrate_1, calibrate_2, calibrate_3, calibrate_4, calibrate_5") === TRUE) {printf("dropped tables.\n");}
 
 
@@ -199,8 +199,9 @@ else echo("output Statement failed: ". $mysqli->error . "<br>");
 if ($mysqli->query("
 create table physics as select
 main.title ,main.unique_ID ,main.image ,main.link1, main.link2 ,main.Text ,main.depth ,main.x_position ,main.y_position ,main.size,
-  link.x_position as linked_x ,link.y_position as linked_y
-,ROW_NUMBER() OVER(order by size desc) as order_id
+  case when link.x_position is NULL then 0 else link.x_position end as linked_x,
+  case when link.y_position is NULL then 0 else link.y_position end as linked_y, 
+  ROW_NUMBER() OVER(order by size desc) as order_id
 
 from
 

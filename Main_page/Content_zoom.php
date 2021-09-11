@@ -45,7 +45,7 @@ else $_SESSION['vertical_max'] = 1700;
 
 if(isset($_SESSION['multiplier']))
 $_SESSION['multiplier']=$_SESSION['multiplier'];
-else $_SESSION['multiplier'] = 0.1;
+else $_SESSION['multiplier'] = 0.001;
 
 if(isset($_SESSION['map_select']))
 $_SESSION['map_select']=$_SESSION['map_select'];
@@ -86,7 +86,7 @@ $map_select = $_SESSION['map_select'];
 		if ($z_num == 0 ) {
 					$_SESSION['views']=1;
 					$_SESSION['size_min'] = 0;
-					$_SESSION['size_max'] = 230;
+					$_SESSION['size_max'] = 1000;
 					$_SESSION['horizontal_min'] = -1400;
 					$_SESSION['horizontal_max'] = 1400;
 					$_SESSION['vertical_min'] = -1100;
@@ -329,13 +329,15 @@ $map_select = $_SESSION['map_select'];
 	
 	//mysql_select_db($database_physixjuly, $physixjuly);
 	$query_getexperiment = "SELECT title, text, size, image, x_position, y_position, linked_x, linked_y, order_id
-		 FROM sheet1
-		 where size >= '$size_min' 
-		 and size <= '$size_max'
-		 and x_position <= '$horizontal_max'
-		 and x_position >= '$horizontal_min'
-		 and y_position <= '$vertical_max'
-		 and y_position >= '$vertical_min'
+		 FROM $map_select
+		 where size >= $size_min
+		 		 and x_position <= $horizontal_max
+
+		 and x_position >= $horizontal_min
+		 and y_position <= $vertical_max
+		 and y_position >= $vertical_min
+		 and size <= $size_max
+
 		 ";
 	$getexperiment = mysqli_query($physixjuly, $query_getexperiment);
 		printf("Select returned %d rows.\n", $getexperiment->num_rows);
@@ -372,8 +374,8 @@ z-index:10">
 <!--at multiplier 0.1 the node should be 100 px wide for a node size 200, 0.1*200 * x = 100-->
 <div class="node1" onclick ="replace_content('<?php echo $row_getexperiment['order_id']; ?>')"
 	style="overflow:hidden;
-	width:<?php echo min(max(($row_getexperiment['size']*$multiplier*10),10),150)."px"; ?>;
-	height:<?php echo min(max(($row_getexperiment['size']*$multiplier*15),0),200)."px"; ?>;	
+	width:<?php echo min(max(($row_getexperiment['size']*$multiplier),10),150)."px"; ?>;
+	height:<?php echo min(max(($row_getexperiment['size']*$multiplier),0),200)."px"; ?>;	
 	position:absolute;
 	left:<?php echo (((($row_getexperiment['x_position'])-$horizontal_min)/($horizontal_max - $horizontal_min))*1000)."px"; ?>;
 	top:<?php echo (((($row_getexperiment['y_position'])-$vertical_min)/($vertical_max - $vertical_min))*750)."px"; ?>; 
@@ -383,8 +385,8 @@ z-index:10">
 <!-- header-->
 <div class="node-header" style = "text-align:center;background:#5EBA41;overflow:hidden;">
 <!-- image-->
-<div class= "img-wrap" style = "float:left;margin-top:2px;margin-bottom:0px;margin-left:4px;
-	width:<?php echo min(max(($row_getexperiment['size']*$multiplier*7),10),150)."px"; ?>;
+<div class= "img-wrap" style = "float:left;margin-top:2px;margin-bottom:0px;margin-left:7px;
+	width:<?php echo min(max(($row_getexperiment['size']*$multiplier*0.8),10),150)."px"; ?>;
 ">
 	<p style="text-align:center;z-index:-1"><img id="myimage" 
 	src=<?php echo "../Images/".$row_getexperiment['image'];?> 
@@ -395,7 +397,7 @@ z-index:10">
 
 	<!-- title-->
 	<p class="node-title" style="float:left;margin-top:2px;margin-bottom:0px;
-	width:<?php echo min(max(($row_getexperiment['size']*$multiplier*7),9),150)."px"; ?>;
+	width:<?php echo min(max(($row_getexperiment['size']*$multiplier),9),150)."px"; ?>;
 	font-size:<?php echo min(max(($row_getexperiment['size']*$multiplier),4),14)."px"; ?>"><?php echo $row_getexperiment['title']; ?></p>
 	</div>
 </div>	
@@ -403,7 +405,7 @@ z-index:10">
 
 <!-- text-->
 <div class = "text-wrap1" style = "float:left;margin-top:2px;margin-left:4px;z-index:-1;
-	width:<?php echo min(max(($row_getexperiment['size']*$multiplier*7),10),150)."px"; ?>;
+	width:<?php echo min(max(($row_getexperiment['size']*$multiplier),10),150)."px"; ?>;
 	font-size:<?php echo min(max(($row_getexperiment['size']*$multiplier),0),8)."px"; ?>;
 	height:<?php echo min(max(($row_getexperiment['size']*$multiplier),0),50)."px"; ?>;
 	overflow:hidden;

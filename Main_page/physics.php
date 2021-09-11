@@ -157,6 +157,7 @@ margin:0px;
 
 .container {
 	width: 1210px;
+	left: 20px;
 	background:white;
 	margin: 0 auto; 
 }
@@ -170,7 +171,7 @@ margin:0px;
 	right: 0px;
 	top: 0px;
 	height:70px;
-	box-shadow: 0px 1px #FFF inset, 0px 1px 3px rgba(34, 25, 25, 0.4);
+	box-shadow: 0px 0px #FFF inset, 0px 1px 3px rgba(34, 25, 25, 0.4);
         color:#186400;
         padding: 0 0}
 
@@ -320,18 +321,18 @@ color:#87D86D;
 
 
   <div class="header" style="overflow:hidden">
-	  <div style = "width:1210px; margin: 0px auto;">
-		<div style = "width:400px;">
-			  <p style="float:left;margin-top:5px">
+	  <div style = " margin: 0px auto;">
+		<div style = "width:400px; position:static;">
+			  <p style="float:left;margin-top:0px">
 				  <img src="../Images/Pale_Blue_Dot.jpg" alt="Logo" 
 				  name="Insert_logo" width="180" height="80" id="Pale_Blue_Dot" 
 				  style="background: #66FF33; display:block;" />
 			  </p>
 			  <h1 style="float:left;margin-left:10px;margin-top:5px;font-size:40px;">Map-O</h1>
 		 </div>
-		 <div style ="	position:fixed;	left: 800px;	right: 0px;	top: 0px;  width:810;">
+		 <div style ="	position:fixed;	width: 70%;	right: 0px;	top: 0px; ">
 		  <!-- search-->
-				<form style = "float:top;font-size:10px;padding-left:150px;margin-top:5px;z-index:2000">
+				<form style = "float:top;font-size:10px;padding-left:0px;margin-top:5px;z-index:2000">
 				<input type="text" size="5" name= "inputbox" onkeyup="showResult(this.value)" style = "float:left;font-size:20px;width:400px;margin-top:5px" >
 				<div id="livesearch" style = "overflow:hidden;font-size:20px;z-index:200;background:#66FF33"></div>	
 				<INPUT style = "float:top;margin-top:5px;" TYPE="button" id="submit" NAME="button" Value="Search" 
@@ -339,7 +340,7 @@ color:#87D86D;
 				</form>
 
 		 </div>
-		 <div style = "float:top;padding-top:48px;width;700px">
+		 <div style = "float:top;padding-top:48px;">
 			 <div id="map-tabs" onclick =	"replace_content('81')">Map of physics</div>
 			<div id="map-tabs" onclick =	"replace_content('82')" >Map of bike parts </div>
 			<div id="map-tabs">Map of Vegetarian food</div>
@@ -408,52 +409,85 @@ class="container" style = "margin-top:30px;position:static;"
 	<script>
 
 		  
-		function replace_content(str)
-		{
+	function replace_content(str)
+	{
 
-		  if (window.XMLHttpRequest) {
-			// code for IE7+, Firefox, Chrome, Opera, Safari
-			xmlhttp=new XMLHttpRequest();
-		  } else { // code for IE6, IE5
-			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-		  }
-		  xmlhttp.onreadystatechange=function() {
-			if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-			  document.getElementById("target").innerHTML=xmlhttp.responseText;
-			}
-		  }
-		  xmlhttp.open("GET","content_zoom.php?q="+str,true);
-		  xmlhttp.send();
-
+	  if (window.XMLHttpRequest) {
+		// code for IE7+, Firefox, Chrome, Opera, Safari
+		xmlhttp=new XMLHttpRequest();
+	  } else { // code for IE6, IE5
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+	  xmlhttp.onreadystatechange=function() {
+		if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+		  document.getElementById("target").innerHTML=xmlhttp.responseText;
 		}
+	  }
+	  xmlhttp.open("GET","content_zoom.php?q="+str,true);
+	  xmlhttp.send();
+
+	}
 
 		  
 		
-function showResult(str) {
-  if (str.length==0) {
-    document.getElementById("livesearch").innerHTML="";
-    document.getElementById("livesearch").style.border="0px";
-    return;
-  }
-  if (window.XMLHttpRequest) {
-    // code for IE7+, Firefox, Chrome, Opera, Safari
-    xmlhttp=new XMLHttpRequest();
-  } else {  // code for IE6, IE5
-    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  xmlhttp.onreadystatechange=function() {
-    if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-      document.getElementById("livesearch").innerHTML=xmlhttp.responseText;
-      document.getElementById("livesearch").style.border="1px solid #A5ACB2";
-    }
-  }
-  xmlhttp.open("GET","search_go.php?a="+str,true);
-  xmlhttp.send();
-}
-function searchResults (form) {
-    var search_inp = form.inputbox.value;
-    replace_content(search_inp);
-}
+	function showResult(str) {
+	  if (str.length==0) {
+	    document.getElementById("livesearch").innerHTML="";
+	    document.getElementById("livesearch").style.border="0px";
+	    return;
+	  }
+	  if (window.XMLHttpRequest) {
+	    // code for IE7+, Firefox, Chrome, Opera, Safari
+	    xmlhttp=new XMLHttpRequest();
+	  } else {  // code for IE6, IE5
+	    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+	  xmlhttp.onreadystatechange=function() {
+	    if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+	      document.getElementById("livesearch").innerHTML=xmlhttp.responseText;
+	      document.getElementById("livesearch").style.border="1px solid #A5ACB2";
+	    }
+	  }
+	  xmlhttp.open("GET","search_go.php?a="+str,true);
+	  xmlhttp.send();
+	}
+	function searchResults (form) {
+	    var search_inp = form.inputbox.value;
+	    replace_content(search_inp);
+	}
+
+
+	// document.getElementById("zarea3").addEventListener("wheel", function(event)
+	// 	{
+	// 	 if (event.deltaY < 0)
+	// 	 {
+	// 	  console.log('scrolling up');
+ //  		  document.getElementById('zarea3').textContent= 'scrolling up';
+	// 	  replace_content('99');
+	// 	 }
+	// 	 else if (event.deltaY > 0)
+	// 	 {
+	// 	  console.log('scrolling down');
+ //  		  document.getElementById('zarea3').textContent= 'scrolling down';
+	// 	  replace_content('4');
+	// 	 }
+	// 	});
+
+	function define_direction(str)
+		{
+		 if (event.deltaY < 0)
+		 {
+		  replace_content(str);
+		 }
+		 else if (event.deltaY > 0)
+		 {
+		  replace_content('99');
+		 }
+		}
+
+
+
+
 </script>
 	<div class="content" id="target">
 			<?php 
